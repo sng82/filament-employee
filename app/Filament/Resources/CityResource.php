@@ -22,16 +22,20 @@ class CityResource extends Resource
     protected static ?string $model = City::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationGroup = 'System Management';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Card::make()->schema([
-                    TextInput::make('name'),
-                    Select::make('state_id')
-                          ->relationship('state', 'name'),
-                ])->columns(2)
+                Card::make()
+                    ->schema([
+                        TextInput::make('name')
+                                 ->maxLength(255),
+                        Select::make('state_id')
+                              ->relationship('state', 'name'),
+                    ])
+                    ->columns(2)
             ]);
     }
 

@@ -34,8 +34,10 @@ class EmployeeResource extends Resource
             ->schema([
                 Card::make()->schema([
                     TextInput::make('first_name')
+                             ->maxLength(255)
                              ->required(),
                     TextInput::make('last_name')
+                             ->maxLength(255)
                              ->required(),
                     DatePicker::make('birth_date'),
                 ])->columns(2),
@@ -62,7 +64,8 @@ class EmployeeResource extends Resource
                           ->afterStateUpdated(function (callable $set) {
                               $set('state_id', null);
                               $set('city_id', null);
-                          }),
+                          })
+                          ->required(),
                     Select::make('state_id')
                           ->label('State/County')
                           ->options(function (callable $get) {
@@ -73,7 +76,8 @@ class EmployeeResource extends Resource
                               return $country->states->pluck('name', 'id');
                           })
                           ->reactive()
-                          ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
+                          ->afterStateUpdated(fn (callable $set) => $set('city_id', null))
+                          ->required(),
                     Select::make('city_id')
                           ->label('City')
                           ->options(function (callable $get) {
@@ -82,10 +86,13 @@ class EmployeeResource extends Resource
                                   return City::all()->pluck('name', 'id');
                               }
                               return $state->cities->pluck('name', 'id');
-                          }),
+                          })
+                          ->required(),
                     TextInput::make('address')
-                             ->label('Street'),
-                    TextInput::make('postcode'),
+                             ->label('Street')
+                             ->maxLength(255),
+                    TextInput::make('postcode')
+                             ->maxLength(255),
                 ])->columns(2)
             ]);
     }
